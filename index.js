@@ -1,8 +1,13 @@
 var express = require('express')
+var path = require('path');
+var favicon = require('serve-favicon');
+
 var app = express()
+app.use(favicon(path.join(__dirname, 'images', 'icon.jpg')));
+
 
 app.get('/', function (req, res) {
-    res.send('Hello World')
-  })
-   
-  app.listen(3000)
+    res.sendFile(path.join(__dirname + '/index.html'));
+})
+
+app.listen(3000)
