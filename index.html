@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Socket Chat</title>
+    <title>SocketChat</title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
@@ -21,7 +21,7 @@
 <body>
 
     <div class="jumbotron">
-        <h1>Socket Chat</h1>
+        <h1>SocketChat</h1>
     </div>
     <h3 class="testClass">Hello, </h3>
     <br /><br />
@@ -54,40 +54,13 @@
     <script>
         // Gets messages from Heroku Postgres (limit = 40,000)
         function getChatLogs() {
-            /* 
-            Message JSON structure:
-            {
-                author: 'dummyAuthor',
-                message: 'dummyMessage',
-                authorIp: 'authorIp',
-                unixTimeStamp: 1551823674
-            }
-            */
-            let messageList = [{
-                    author: 'John Doe',
-                    message: 'Hi all, my name is John!',
-                    authorIp: '255.255.255.0',
-                    unixTimeStamp: 1551823674
-                },
-                {
-                    author: 'Jane Doe',
-                    message: 'Hello John, I\'m Jane!',
-                    authorIp: '192.0.2.1',
-                    unixTimeStamp: 1551823675
-                },
-                {
-                    author: 'John Doe',
-                    message: 'Hey Jane!',
-                    authorIp: '255.255.255.0',
-                    unixTimeStamp: 1551823676
-                }
-            ];
-
-            return messageList;
+            var messages = <%-JSON.stringify(messages)%>;
+            
+            return messages;
         }
 
         // Sends user's message
-        function sendMessage(){
+        function sendMessage() {
             let messageText = $("#messageText").val();
             console.log(messageText);
 
@@ -105,11 +78,11 @@
 
         // Gets chat logs and displays them
         let chatLog = getChatLogs();
-        console.log(chatLog);
+        //console.log(chatLog);
         for (let i = 0; i < chatLog.length; i++) {
             //console.log(chatLog[i].message);
             $(".chatApp").prepend(
-                `<div class="message"><h4>${chatLog[i].message}</h4><p>${chatLog[i].author} (IP: ${chatLog[i].authorIp}) at ${chatLog[i].unixTimeStamp}</p></div>`
+                `<div class="message"><h4>${chatLog[i].message_text}</h4><p>${chatLog[i].author} (IP: ${chatLog[i].message_author_ip}) at ${chatLog[i].message_unix_timestamp}</p></div>`
             );
         }
     </script>
@@ -118,6 +91,6 @@
 </html>
 
 <!-- TODO: Add chat app UI to frontend (look over: https://bootsnipp.com/snippets/1ea0N) -->
-<!-- TODO: Migrate chat to Heroku (add Heroku link to GitHub repo) -->
 <!-- TODO: Implement WebSockets -->
 <!-- TODO: Implement username setting -->
+<!-- TODO: Fix insecure use to Heroku Postgres Login URL -->
