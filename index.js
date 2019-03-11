@@ -33,7 +33,7 @@ function startServer() {
 
     const io = require("socket.io")(server)
 
-    io.on('connection', (socket) => {
+    io.sockets.on('connection', (socket) => {
         function sendMessageToClient(data) {
             io.sockets.emit('send_message_to_client', data);
 
