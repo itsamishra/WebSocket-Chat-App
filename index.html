@@ -91,10 +91,11 @@
         if (!domainAndPort.includes('localhost')){
             domainAndPort = domainAndPort.substr(0, domainAndPort.length-1) + ":" + PORT;
         }
+        domainAndPort.replace('https', 'http');
         console.log(`Domain & Port: ${domainAndPort}`);
 
         // Creates new socket
-        //var socket = io.connect('http://localhost:3000');
+        //var socket = io.connect('https://localhost:3000'.replace('https', 'http'));
         var socket = io.connect(domainAndPort);
 
         socket.on('send_message_to_client', (data) => {
