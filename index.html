@@ -82,6 +82,15 @@
             $("#messageText").val("");
         }
 
+        var socket = io();
+        var el = document.getElementById('server-time');
+
+        socket.on('time', function (timeString) {
+            //el.innerHTML = 'Server time: ' + timeString;
+            console.log('Server time: ' + timeString);
+        });
+
+        /*
         // Port on which app runs
         const PORT = <%-JSON.stringify(port)%>;
 
@@ -96,12 +105,6 @@
         console.log(`Domain & Port: ${domainAndPort}`);
 
         // Creates new socket
-        /*
-        var socket = io.connect('https://localhost:3000', {
-            secure: true,
-            rejectUnauthorized: false
-        });
-        */
         var socket = io.connect(domainAndPort);
 
         socket.on('send_message_to_client', (data) => {
@@ -116,6 +119,7 @@
         // Gets and displays name
         let name = generateName();
         $(".testClass").append(name + '!');
+        */
     </script>
 </body>
 
