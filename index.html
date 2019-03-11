@@ -38,10 +38,10 @@
     <br /><br />
 
     <div class="chatApp">
-        <div class="message">
+        <!-- <div class="message">
             <h4>First Message</h4>
             <p>John Doe (IP: 123.456.7890) at 1551823673</p>
-        </div>
+        </div> -->
     </div>
 
     <!-- JS -->
@@ -51,12 +51,23 @@
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
     <script>
-        // Gets messages from Heroku Postgres (limit = 40,000)
-        function getChatLogs() {
-            var messages = <%-JSON.stringify(messages)%>;
-            
-            return messages;
+        //  // Gets messages from Heroku Postgres (limit = 40,000)
+        //    function getChatLogs() {
+        //          var messages = <%-JSON.stringify(messages)%>;
+        //
+        //  return messages;
+        //}
+        // Generates name
+        function generateName() {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+            for (var i = 0; i < 5; i++)
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+            return text;
         }
 
         // Sends user's message
@@ -64,27 +75,44 @@
             let messageText = $("#messageText").val();
             console.log(messageText);
 
+            // Sends message using WebSocket as long as it isn't blank
+            if (messageText != '') {
+                socket.emit('send_message_to_server', {
+                    message: messageText,
+                    name: name,
+                    unixTime: +new Date()
+                });
+            }
+
             // Resets text box
             $("#messageText").val("");
-
-            // Sends message to Postgres DB
-            // TODO: Send message to Postgres DB
         }
 
-        // Gets and displays name/IP
-        let name = "dummyName";
-        let ip = "123.456.7890"
-        $(".testClass").append(name + ` (IP: ${ip})!`);
+        // Creates new socket
+        var socket = io.connect('http://localhost:3000');
 
-        // Gets chat logs and displays them
-        let chatLog = getChatLogs();
-        //console.log(chatLog);
-        for (let i = 0; i < chatLog.length; i++) {
-            //console.log(chatLog[i].message);
+        socket.on('send_message_to_client', (data) => {
+            console.log(data);
+
             $(".chatApp").prepend(
-                `<div class="message"><h4>${chatLog[i].message_text}</h4><p>${chatLog[i].author} (IP: ${chatLog[i].message_author_ip}) at ${chatLog[i].message_unix_timestamp}</p></div>`
+                `<div class="message"><h4>${data["message"]}</h4><p>${data["name"]} at ${data["unixTime"]}</p></div>`
             );
-        }
+        });
+
+
+        // Gets and displays name
+        let name = generateName();
+        $(".testClass").append(name + '!');
+
+        //// Gets chat logs and displays them
+        //let chatLog = getChatLogs();
+        ////console.log(chatLog);
+        //for (let i = 0; i < chatLog.length; i++) {
+        //   //console.log(chatLog[i].message);
+        //  $(".chatApp").prepend(
+        //     `<div class="message"><h4>${chatLog[i].message_text}</h4><p>${chatLog[i].author} (IP: ${chatLog[i].message_author_ip}) at ${chatLog[i].message_unix_timestamp}</p></div>`
+        // );
+        // }
     </script>
 </body>
 

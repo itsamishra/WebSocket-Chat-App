@@ -6,6 +6,9 @@ const {
     Client
 } = require('pg');
 
+// var http = require('http').Server(express);
+// var io = require('socket.io');
+
 
 // Gets all current messages
 getMessages();
@@ -42,7 +45,6 @@ function startServer(messages) {
     app.engine('html', require('ejs').renderFile);
     app.set('view engine', 'html');
 
-
     // Favicon
     app.use(favicon(path.join(__dirname, 'images', 'icon.jpg')));
 
@@ -55,5 +57,23 @@ function startServer(messages) {
     });
 
     // Listens to port
-    app.listen(port);
+    server = app.listen(port);
+
+    const io = require("socket.io")(server)
+
+    io.on('connection', (socket) => {
+        function sendMessageToClient(data) {
+            io.sockets.emit('send_message_to_client', data);
+
+        };
+
+        console.log('new user connected...');
+
+        socket.username = "Anonymous";
+        socket.on('send_message_to_server', (data) => {
+            console.log(data);
+
+            sendMessageToClient(data);
+        });
+    });
 }
