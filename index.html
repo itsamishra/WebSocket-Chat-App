@@ -88,9 +88,8 @@
         socket.on('time', function (timeString) {
             //el.innerHTML = 'Server time: ' + timeString;
             console.log('Server time: ' + timeString);
-            socket.emit('send_message_to_server', {
-                data: 'insert data here'
-            })
+
+            
         });
 
         /*
