@@ -81,22 +81,26 @@
             // Resets text box
             $("#messageText").val("");
         }
-        
+
         // Port on which app runs
         const PORT = <%-JSON.stringify(port)%>;
+        
         console.log(PORT);
         console.log(window.location.href);
         let domainAndPort = window.location.href;
 
-        if (!domainAndPort.includes('localhost')){
-            domainAndPort = domainAndPort.substr(0, domainAndPort.length-1) + ":" + PORT;
+        if (!domainAndPort.includes('localhost')) {
+            domainAndPort = domainAndPort.substr(0, domainAndPort.length - 1) + ":" + PORT;
         }
         //domainAndPort = domainAndPort.replace('https', 'http');
         console.log(`Domain & Port: ${domainAndPort}`);
 
         // Creates new socket
-        //var socket = io.connect('https://localhost:3000', {secure: true});
-        var socket = io.connect(domainAndPort, {secure: true});
+        //var socket = io.connect('https://localhost:3000', {secure: true, rejectUnauthorized: false});
+        var socket = io.connect(domainAndPort, {
+            secure: true,
+            rejectUnauthorized: false
+        });
 
         socket.on('send_message_to_client', (data) => {
             console.log(data);
