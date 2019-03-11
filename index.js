@@ -6,39 +6,11 @@ const {
     Client
 } = require('pg');
 
-// var http = require('http').Server(express);
-// var io = require('socket.io');
+startServer();
 
-
-// Gets all current messages
-getMessages();
-
-function getMessages() {
-    // 👇 INSECURE DON'T DO THIS IN PRODUCTION 👇
-    const connectionString = "postgres://pezyavflirolyx:47f51ca13d506bf4443db4c4e4aa995f52d3fc0e16e3df167d0c993073f551cf@ec2-75-101-133-29.compute-1.amazonaws.com:5432/d7ja08af1rhhkr"
-    // 👆 INSECURE DON'T DO THIS IN PRODUCTION 👆
-    const client = new Client({
-        connectionString: connectionString,
-        ssl: true,
-    });
-
-    client.connect();
-    let messages = [];
-    client.query('SELECT * FROM "Message" ORDER BY message_unix_timestamp ASC;', (err, res) => {
-        if (err) throw err;
-        for (let row of res.rows) {
-            messages.push(row);
-        }
-        client.end();
-
-        // Starts webserver
-        startServer(messages);
-    });
-}
-
-function startServer(messages) {
+function startServer() {
     // Sets port (for Heroku)
-    var port = process.env.PORT || 3000;
+    const PORT = process.env.PORT || 3000;
 
     // Creates Express App
     var app = express();
@@ -52,12 +24,12 @@ function startServer(messages) {
     app.get('/', function (req, res) {
         // res.sendFile(path.join(__dirname + '/index.html'));
         res.render(__dirname + "/index.html", {
-            messages: messages
+            port: PORT
         });
     });
 
     // Listens to port
-    server = app.listen(port);
+    server = app.listen(PORT);
 
     const io = require("socket.io")(server)
 

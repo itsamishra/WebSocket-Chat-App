@@ -53,12 +53,6 @@
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
     <script>
-        //  // Gets messages from Heroku Postgres (limit = 40,000)
-        //    function getChatLogs() {
-        //          var messages = <%-JSON.stringify(messages)%>;
-        //
-        //  return messages;
-        //}
         // Generates name
         function generateName() {
             var text = "";
@@ -87,9 +81,21 @@
             // Resets text box
             $("#messageText").val("");
         }
+        
+        // Port on which app runs
+        const PORT = <%-JSON.stringify(port)%>;
+        console.log(PORT);
+        console.log(window.location.href);
+        let domainAndPort = window.location.href;
+
+        if (!domainAndPort.includes('localhost')){
+            domainAndPort = domainAndPort.substr(0, domainAndPort.length-1) + ":" + PORT;
+        }
+        console.log(`Domain & Port: ${domainAndPort}`);
 
         // Creates new socket
-        var socket = io.connect('http://localhost:3000');
+        //var socket = io.connect('http://localhost:3000');
+        var socket = io.connect(domainAndPort);
 
         socket.on('send_message_to_client', (data) => {
             console.log(data);
@@ -103,16 +109,6 @@
         // Gets and displays name
         let name = generateName();
         $(".testClass").append(name + '!');
-
-        //// Gets chat logs and displays them
-        //let chatLog = getChatLogs();
-        ////console.log(chatLog);
-        //for (let i = 0; i < chatLog.length; i++) {
-        //   //console.log(chatLog[i].message);
-        //  $(".chatApp").prepend(
-        //     `<div class="message"><h4>${chatLog[i].message_text}</h4><p>${chatLog[i].author} (IP: ${chatLog[i].message_author_ip}) at ${chatLog[i].message_unix_timestamp}</p></div>`
-        // );
-        // }
     </script>
 </body>
 
