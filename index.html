@@ -91,7 +91,7 @@
         if (!domainAndPort.includes('localhost')){
             domainAndPort = domainAndPort.substr(0, domainAndPort.length-1) + ":" + PORT;
         }
-        domainAndPort.replace('https', 'http');
+        domainAndPort = domainAndPort.replace('https', 'http');
         console.log(`Domain & Port: ${domainAndPort}`);
 
         // Creates new socket
