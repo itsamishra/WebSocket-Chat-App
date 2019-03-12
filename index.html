@@ -88,8 +88,12 @@
         socket.on('time', function (timeString) {
             //el.innerHTML = 'Server time: ' + timeString;
             console.log('Server time: ' + timeString);
-
-            
+        });
+        socket.on('send_message_to_client', function (data) {
+            console.log(data);
+            $(".chatApp").prepend(
+                `<div class="message"><h4>${data["message"]}</h4><p>${data["name"]} at ${data["unixTime"]}</p></div>`
+            );
         });
 
         /*

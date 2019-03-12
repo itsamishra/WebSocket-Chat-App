@@ -65,8 +65,11 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => console.log('Client disconnected'));
 
     socket.on('send_message_to_server', (data) => {
-        console.log('send_message_to_server');
         console.log(data);
+        
+        // socket.emit('send_message_to_client', data);
+        //io.emit('send_message_to_client', data);
+        io.sockets.emit('send_message_to_client', data);
     });
 });
 
