@@ -69,7 +69,7 @@
             let messageText = $("#messageText").val();
 
             // Sends message using WebSocket as long as it isn't blank
-            if (messageText.trim() != '') {
+            if ( (messageText.trim() != '') && (!isRestricted(messageText)) ) {
                 socket.emit('send_message_to_server', {
                     message: messageText,
                     name: name,
@@ -80,6 +80,30 @@
             // Resets text box
             $("#messageText").val("");
         }
+
+        // Checks for restricted keywords
+        function isRestricted(messageStr){
+            messageStr = messageStr.toLowerCase();
+
+            for (let i=0; i<RESTRICTED_KEYWORDS.length; i++){
+                if (messageStr.indexOf(RESTRICTED_KEYWORDS[i]) !== -1){
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // Array of restricted keywords
+        const RESTRICTED_KEYWORDS = [
+            'script',
+            '<',
+            '>',
+            '/',
+            '\\',
+            'alert',
+            'console'
+        ];
 
         // Gets and displays name
         let name = generateName();
