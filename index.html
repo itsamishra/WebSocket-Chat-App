@@ -67,10 +67,9 @@
         // Sends user's message
         function sendMessage() {
             let messageText = $("#messageText").val();
-            console.log(messageText);
 
             // Sends message using WebSocket as long as it isn't blank
-            if (messageText != '') {
+            if (messageText.trim() != '') {
                 socket.emit('send_message_to_server', {
                     message: messageText,
                     name: name,
@@ -82,56 +81,19 @@
             $("#messageText").val("");
         }
 
-        var socket = io();
-        //var socket = io.connect('http://localhost:3000');
+        // Gets and displays name
+        let name = generateName();
+        $(".testClass").append(name + '!');
 
-        socket.on('time', function (timeString) {
-            //el.innerHTML = 'Server time: ' + timeString;
-            console.log('Server time: ' + timeString);
-        });
+        var socket = io();
+
         socket.on('send_message_to_client', function (data) {
             console.log(data);
             $(".chatApp").prepend(
                 `<div class="message"><h4>${data["message"]}</h4><p>${data["name"]} at ${data["unixTime"]}</p></div>`
             );
         });
-
-        /*
-        // Port on which app runs
-        const PORT = <%-JSON.stringify(port)%>;
-
-        console.log(PORT);
-        console.log(window.location.href);
-        let domainAndPort = window.location.href;
-
-        if (!domainAndPort.includes('localhost')) {
-            domainAndPort = domainAndPort.substr(0, domainAndPort.length - 1) + ":" + PORT;
-        }
-        domainAndPort = domainAndPort.replace('https', 'http');
-        console.log(`Domain & Port: ${domainAndPort}`);
-
-        // Creates new socket
-        var socket = io.connect(domainAndPort);
-
-        socket.on('send_message_to_client', (data) => {
-            console.log(data);
-
-            $(".chatApp").prepend(
-                `<div class="message"><h4>${data["message"]}</h4><p>${data["name"]} at ${data["unixTime"]}</p></div>`
-            );
-        });
-
-
-        // Gets and displays name
-        let name = generateName();
-        $(".testClass").append(name + '!');
-        */
     </script>
 </body>
 
 </html>
-
-<!-- TODO: Add chat app UI to frontend (look over: https://bootsnipp.com/snippets/1ea0N) -->
-<!-- TODO: Implement WebSockets -->
-<!-- TODO: Implement username setting -->
-<!-- TODO: Fix insecure use to Heroku Postgres Login URL -->
